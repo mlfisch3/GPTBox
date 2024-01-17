@@ -20,11 +20,28 @@ pd.options.display.width = 1000
 pd.options.display.max_colwidth = 9999
 
 # Load the JSON file
-@st.experimental_singleton()
+@st.cache_resource()
 def load_data(conversations):
     with open(conversations) as f:
         data = json.load(f)
     return data
+
+# @st.cache_resource(suppress_st_warning=True)
+# def load_data():
+#     conversations = st.sidebar.file_uploader("Load Conversation History File")
+#     if conversations is not None:
+#         data = json.loads(conversations.read().decode("utf-8"))
+#         return data
+#     else:
+#         return None
+# 
+@st.cache_resource()
+def bytes_to_string(conversations):
+    if conversations is not None:
+        data = json.loads(conversations.read().decode("utf-8"))
+        return data
+
+    return None
 
 def extract_messages(mapping):
     messages = []
@@ -48,9 +65,18 @@ def detect_latex(content):
 
 def main():
 
-    conversations = st.text_input("Chat History File (JSON):", "conversations.json")
-    if os.path.isfile(conversations):
-        data = load_data(conversations)
+    #conversations = st.text_input("Chat History File (JSON):", "conversations.json")
+    conversations = st.sidebar.file_uploader("Load Conversation History File")
+    data = bytes_to_string(conversations)
+#    data = load_data()
+    if data is not None:
+    #if conversations is not None:
+        #file_contents = conversations.read().decode("utf-8")
+        
+        # Process the JSON data as needed
+
+    #if os.path.isfile(conversations):
+    #    data = load_data(conversations)
 
         # Sidebar
         st.sidebar.title("Conversations")
