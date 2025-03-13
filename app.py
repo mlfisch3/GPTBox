@@ -48,13 +48,13 @@ def extract_messages(mapping):
     for key, value in mapping.items():
         message_data = value.get("message")
         if message_data:
-            create_time = datetime.utcfromtimestamp(message_data.get("create_time")).strftime('%Y-%m-%d %H:%M:%S')
+            if message_data.get("create_time") is not None:
+                create_time = datetime.fromtimestamp(message_data.get("create_time")).strftime('%Y-%m-%d %H:%M:%S')
             author = message_data.get("author", {}).get("role")
             content = " ".join(message_data.get("content", {}).get("parts", []))
             messages.append([create_time, author, content])
     return messages
 
-import re
 
 def detect_latex(content):
     # replace \(...\) with $...$
